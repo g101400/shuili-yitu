@@ -6,7 +6,7 @@
      "%WIX%\bin\light.exe" -ext WixUIExtension -out "<工程名>_Setup.msi" product.wxs files.wxs
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="水利工程基础信息一张图" Language="2052" Version="3.32.0" Manufacturer="小七" UpgradeCode="{A1B2C3D4-0001-4000-8000-000000000001}">
+  <Product Id="*" Name="水利工程基础信息一张图" Language="2052" Version="4.3.0" Manufacturer="小七" UpgradeCode="{A1B2C3D4-0001-4000-8000-000000000001}">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
     <MajorUpgrade DowngradeErrorMessage="已安装更高版本。" />
     <MediaTemplate EmbedCab="yes" />

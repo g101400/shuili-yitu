@@ -23,6 +23,10 @@ bin/
 obj/
 publish/
 publish_v331/
+# 本机打包产物暂存（二进制，走百度网盘分发，不入库）
+releases/
+# 本地构建日志
+build/_*.log
 
 # 工作区 / 凭据
 .workbuddy/
@@ -31,6 +35,8 @@ publish_v331/
 # 离线瓦片与清单（体积大，可再生成；运行需要但用本地缓存）
 offline_tiles/
 native-shell/*/webroot/offline_tiles/
+# 构建期暂存副本（真实 webroot 在顶层，禁止把冗余副本入库）
+native-shell/*/webroot/
 
 # 真实密钥文件：只保留 *.demo.js 模板
 ai_seed.js
@@ -47,3 +53,12 @@ __pycache__/
 # iOS 历史发布包（体积大，不入库；保留构建脚本）
 native-shell/water-ios/apple-package/
 native-shell/water-ios/本地部署/
+secure_boot_cred.js
+native-shell/*/webroot/secure_boot_cred.js
+sec_crypt.js
+native-shell/*/sec_crypt.js
+# 2026-10-23：同 secure_boot_cred.js，内含与之一致的 AES-GCM 加盐凭证参数，
+# 已随独立仓推上 public 仓（native-shell/water-ios/sec_crypt.js），性质敏感件。
+webroot/secure_boot_cred.js
+# 2026-10-23（第 59 轮）：该文件是访问口令 AES-GCM 加盐凭证（199B，含 salt+密文），
+# 曾被 git add -A 带入并推上 public 仓 → 匿名可下载。性质敏感件一律不进版本库。

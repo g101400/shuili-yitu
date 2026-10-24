@@ -3,7 +3,7 @@
 # 用法：sudo bash build_deb.sh
 set -e
 PKG="shuili-map"
-VERSION="3.96.20260925"
+VERSION="4.03.20261024"
 ARCH="${ARCH:-$(dpkg --print-architecture)}"   # 可用 ARCH=mips64el sudo bash build_deb.sh 显式指定目标架构
 HERE="$(cd "$(dirname "$0")" && pwd)"
 BUILD="$HERE/_deb_build"

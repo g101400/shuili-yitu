@@ -2,7 +2,7 @@
 """v2.4.7 文档同步：软件变更文档 3.25 节 + 用户使用文档第 13 节。"""
 import io, os
 
-ROOT = r"D:/Users/WorkBuddy/aowei_win10"
+ROOT = r"D:/Users/WorkBuddy/shuili"
 
 CHANGE_SEC = u"""
 ### 3.25 v2.4.7（2026-09-05）升级按钮 + 自动升级下载 + 古建单通道 + 发版自动上传网盘

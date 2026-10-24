@@ -11,7 +11,7 @@ shutil.copy2 只复制不删除，这些文件会被保留，不会被源目录�
 """
 import os, shutil
 
-ROOT = r"D:/Users/WorkBuddy/aowei_win10"
+ROOT = r"D:/Users/WorkBuddy/shuili"
 WIN = r"D:/Users/WorkBuddy/win11"
 
 EXCLUDE_DIRS = {".git", "node_modules", "__pycache__", "docs", "source_data"}   # docs/含内部组织名，严禁进公开包（2026-09-04）

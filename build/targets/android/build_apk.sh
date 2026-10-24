@@ -5,7 +5,7 @@ set -e
 
 # 自包含：路径基于脚本位置推导（不再写死工作区绝对路径）
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"   # build/targets/android
-REPO="$(cd "$SCRIPT_DIR/../../.." && pwd)"     # 仓库根 = gujian_app
+REPO="$(cd "$SCRIPT_DIR/../../.." && pwd)"     # 仓库根 = shuili
 SOURCE="$REPO"                                  # PWA 源 = gujian_app
 PROJECT="$SCRIPT_DIR"                           # 自包含安卓工程 = build/targets/android
 ASSETS="$PROJECT/app/src/main/assets/www"       # 由 sync 再生
@@ -14,7 +14,7 @@ RELEASE_DIR="$REPO/releases"
 ANDROID_BUILD="${ANDROID_BUILD:-/d/Users/WorkBuddy/android_build}"
 JDK="${JDK:-$ANDROID_BUILD/jdk/jdk-17.0.12+7}"
 GRADLE="${GRADLE:-$ANDROID_BUILD/gradle-8.10/bin/gradle}"
-OUT_APK="$SOURCE/GujianApp-debug.apk"
+OUT_APK="$SOURCE/ShuiliYitu-debug.apk"
 
 export JAVA_HOME="$JDK"
 export PATH="$JDK/bin:$PATH"
@@ -34,7 +34,7 @@ tar --exclude='./docs' --exclude='*.md' \
     --exclude='*.apk' --exclude='*.bak*' --exclude='.data.real.*' \
     --exclude='*.public.*' --exclude='*.internalkeep*' --exclude='*.mjs' --exclude='*.cjs' -cf - . | ( cd "$ASSETS" && tar -xf - )
 # 确保离线内嵌数据 data.js 最新（APK 场景不 fetch）；无则不复制，避免硬失败
-if [ -f "$GUJIAN_APP/data.js" ]; then
+if [ -f "$SOURCE/data.js" ]; then
   cp "$SOURCE/data.js" "$ASSETS/data.js"
 fi
 
@@ -49,17 +49,17 @@ echo "完成 -> $OUT_APK"
 ls -lh "$OUT_APK"
 
 echo "[归档] 按 <名称>V<版本>_<日期>_4060 命名规则留存一份到 releases/..."
-APP_NAME="古建景点打卡"
+APP_NAME="水利工程基础信息一张图"
 APP_VER=$(sed -n 's/.*APP_VER[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$ASSETS/js/app.js" | head -1)
 # 归档名剥离 APP_VER 前导小写 v，避免 Vv 双 V
 APP_VER_CLEAN=$(echo "$APP_VER" | sed 's/^v//')
 DATE=$(date +%Y%m%d)
-RELEASE_DIR="/d/Users/WorkBuddy/aowei_win10/releases"
+RELEASE_DIR="/d/Users/WorkBuddy/shuili/releases"
 mkdir -p "$RELEASE_DIR"
 if [ -z "$APP_VER" ]; then
   echo "!! 未能从 $ASSETS/js/app.js 解析 APP_VER，跳过归档（APK 本体已生成于 $OUT_APK）"
 else
-  REL_NAME="${APP_NAME}V${APP_VER_CLEAN}_${DATE}_4060.apk"
+  REL_NAME="ShuiliYituV${APP_VER_CLEAN}_${DATE}.apk"
   if cp "$OUT_APK" "$RELEASE_DIR/$REL_NAME"; then
     echo "归档 -> $RELEASE_DIR/$REL_NAME"
   else

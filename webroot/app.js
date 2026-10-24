@@ -198,9 +198,9 @@
 
   var APPNAME = "水利工程基础信息一张图";
 
-  var APP_VERSION = "4.02";
+  var APP_VERSION = "4.03";
 
-  var APP_BUILD_DATE = "2026-10-18";
+  var APP_BUILD_DATE = "2026-10-24";
 
   // —— 双通道发版（防泄密）：版本末位奇偶决定发布通道 ——
   // 偶数(如 v3.50) = 内部版，保留单位内部数据；奇数(如 v3.49) = 公开/测试版，不含内部数据。
@@ -9832,6 +9832,9 @@ function buildMenu() {
   /* ---------- 版本变更 ---------- */
 
   var CHANGES = [
+    { v: "v4.03", d: "2026-10-24", items: [
+      "自我完善周期（2026-10-24）：工程目录路径修正（交接文档由错误的 D:/Users/WorkBuddy/水利一张图/ 更正为真实目录 D:/Users/WorkBuddy/shuili/）；构建脚本 GitHub 仓库引用由 gujian4060 收口为 shuili-yitu、产品标识统一为水利工程基础信息一张图（消除跨工程串扰）；清理 native-shell 三壳内 34 个时间戳冗余备份至工程外归档；版本号升至 4.03。功能与菜单 0 删除。"
+    ]},
     { v: "v4.02", d: "2026-10-22", items: [
       "三项目独立化（2026-10-22）：从单体仓库 gujian4060 拆分为独立工程 shuili/gujian/perc（本工程 D:/Users/WorkBuddy/shuili/），webroot 各自独立、互不引用，可分别在不同智能体独立开发与发版；独立 Git 仓库（分支 main）、独立根文档与构建脚本、独立 .gitignore；功能与菜单 0 删除（webroot 与源逐字节一致，已对账）。发布通道：GitHub 仓库 shuili-yitu、百度网盘子目录 水利一张图，均独立归置。"
     ]},

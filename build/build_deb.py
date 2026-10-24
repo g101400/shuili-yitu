@@ -8,21 +8,21 @@
 
 用法：
   python build_deb.py [uos_app_dir]
-  uos_app_dir 默认: D:/Users/WorkBuddy/aowei_win10/three_platforms/uos/uos_app
+  uos_app_dir 默认: D:/Users/WorkBuddy/shuili/native-shell/uos-water-pyqt6
 """
 import os, io, sys, tarfile, lzma, hashlib, re
 
-DEFAULT_UOS = r"D:/Users/WorkBuddy/aowei_win10/three_platforms/uos/uos_app"
+DEFAULT_UOS = r"D:/Users/WorkBuddy/shuili/native-shell/uos-water-pyqt6"
 
 # ---- 与 package.json / electron-builder fpm 调用一致的元数据 ----
-APP_NAME    = "gujian-daka"
-PRODUCT     = "古建景点打卡"
-VERSION     = "2.4.7"
+APP_NAME    = "shuili-yitu"
+PRODUCT     = "水利工程基础信息一张图"
+VERSION     = "4.03"
 ARCH        = "amd64"
 INSTALL_DIR = "/opt/" + PRODUCT
 MAINTAINER  = "yanbing <yanbing@techpromo.cn>"
-URL         = "https://github.com/g101400/gujian4060"
-DESCRIPTION = "古建景点打卡（天地图底图 · 拍照打卡 · 知识库 · 支持离线）"
+URL         = "https://github.com/g101400/shuili-yitu"
+DESCRIPTION = "水利工程基础信息一张图（天地图底图 · 地图标记 · 知识库 · 支持离线）"
 DEPENDS     = "libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0"
 RECOMMENDS  = "libappindicator3-1"
 EXEC_BIN    = INSTALL_DIR + "/" + APP_NAME
@@ -88,7 +88,7 @@ def collect_entries(uos_app):
             entries.append((src, INSTALL_DIR + "/" + rel))
     entries.append((icon, "/usr/share/icons/hicolor/512x512/apps/%s.png" % APP_NAME))
     # desktop 临时落盘
-    desktop_tmp = os.path.join(uos_app, "release", "_gujian.desktop")
+    desktop_tmp = os.path.join(uos_app, "release", "_shuili.desktop")
     with io.open(desktop_tmp, "w", encoding="utf-8") as f:
         f.write(DESKTOP)
     entries.append((desktop_tmp, "/usr/share/applications/%s.desktop" % APP_NAME))

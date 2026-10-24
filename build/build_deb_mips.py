@@ -13,17 +13,17 @@ Electron 官方不提供 mips64el 二进制（仅 loongnix 社区 2018-2021 老�
 """
 import os, io, sys, tarfile, lzma, hashlib, re
 
-DEFAULT_SRC = r"D:/Users/WorkBuddy/aowei_win10/shuili_app"
+DEFAULT_SRC = r"D:/Users/WorkBuddy/shuili/native-shell/uos-water-pyqt6"
 
-APP_NAME   = "gujian-daka-loongson"
-PRODUCT    = "古建景点打卡"
-VERSION    = "2.4.7"
+APP_NAME   = "shuili-yitu-loongson"
+PRODUCT    = "水利工程基础信息一张图"
+VERSION    = "4.03"
 ARCH       = "mips64el"
-INSTALL    = "/opt/gujian-daka"
-BIN        = "/usr/bin/gujian-daka"
+INSTALL    = "/opt/shuili-yitu"
+BIN        = "/usr/bin/shuili-yitu"
 MAINTAINER = "yanbing <yanbing@techpromo.cn>"
-URL        = "https://github.com/g101400/gujian4060"
-DESCRIPTION = "古建景点打卡（龙芯版·浏览器壳：天地图底图/拍照打卡/知识库，支持离线）"
+URL        = "https://github.com/g101400/shuili-yitu"
+DESCRIPTION = "水利工程基础信息一张图（龙芯版·浏览器壳：天地图底图/地图标记/知识库，支持离线）"
 
 EXCLUDE_DIRS = {"node_modules", ".git", "__pycache__", "docs"}
 EXCLUDE_SUFFIX = (".apk", ".log")
@@ -32,7 +32,7 @@ EXCLUDE_JUNK = (".bak", ".data.real", ".public.", ".mjs", ".cjs", "data.geojson"
 
 LAUNCHER = """#!/bin/bash
 # 水利工程一张图（龙芯版）启动器：调用系统浏览器打开本地 PWA（支持离线；在线底图需联网）
-APP_DIR="/opt/gujian-daka"
+APP_DIR="/opt/shuili-yitu"
 URL="file://${APP_DIR}/index.html"
 BROWSERS=(qaxbrowser cnbrowser 360se 360browser chromium-browser chromium google-chrome microsoft-edge firefox deepin-browser org.gnome.Epiphany)
 for b in "${BROWSERS[@]}"; do

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gujian 源码 → GitHub 同步脚本（REST API 直推，规避 github.com:443 不通）
+shuili 源码 → GitHub 同步脚本（REST API 直推，规避 github.com:443 不通）
 
-- 仓库：g101400/gujian4060 (public)，分支：main
+- 仓库：g101400/shuili-yitu (public)，分支：main
 - 枚举：从仓库根目录(本脚本上级的上级)走文件系统，应用与 .gitignore 一致的排除规则
   （含 git 追踪 + 未追踪非忽略的全部文件）
 - 自动排除：secrets/config.local.js、build/targets/keystore/、构建产物(*.apk/*.keystore 等)、
@@ -22,7 +22,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 
-REPO = "g101400/gujian4060"
+REPO = "g101400/shuili-yitu"
 BRANCH = "main"
 TOKEN_FILE = "D:/Users/WorkBuddy/.github_token"
 API = "https://api.github.com"
@@ -133,6 +133,56 @@ def list_files():
     return out
 
 
+# ---- 推送前硬门禁（2026-10-23 第 59 轮新增，形态 ㊺）-----------------------------
+# 为什么加：2026-10-23 实测三仓 webroot/secure_boot_cred.js（199B，AES-GCM 加盐凭证）
+#   已被 git 追踪并推上 **public** 仓，匿名请求 API 即可解出明文。
+#   当时 EXCLUDE_EXACT 里没有它，is_excluded() 对它是零覆盖 ——
+#   门禁若只按"排除清单"判，就永远看不见清单外的东西（㊸ 教训）。
+# 本函数不读排除清单，按**文件性质**独立扫即将上传的字节：命中即 ABORT，零上传。
+SENSITIVE_NAMES = ("secure_boot_cred.js", "ai_seed.js", ".github_token",
+                    "sec_crypt.js")   # 2026-10-23 实跑新抓：含同一套 AES-GCM 加盐参数
+ALLOW_NAMES = ("ai_seed.demo.js",)          # 公开占位模板，允许上传
+# 内容口径（2026-10-23 首轮实跑抓到的两条**误报**已收窄，详见下方 note）：
+#   · "sk-or-v1" 会命中 push.py **自身**（它就是常量字面量）与 __pycache__ 里的 .pyc
+#     → 门禁自匹配，属假红（㊸ 已踩过一次，此处复发，故加 SELF_SKIP）。
+#   · "__SEC_BOOT" 会命中 secure_boot.js（13KB 访问口令门**程序**，变量名而已）
+#     和 security 相关 4 份 iOS 壳脚本 → 不是凭据，属假红。真凭据靠**文件名**抓。
+#   → 收敛为「真实凭据形态」：OpenRouter key 的完整前缀 + GitHub PAT + 加盐凭证的 JSON 骨架。
+SENSITIVE_CONTENT_PATTERNS = (
+    "sk-or-v1-",                             # OpenRouter 真 key（带连字符，降低误配）
+    "github_pat_11",                         # GitHub fine-grained PAT
+    '"alg":"AES-GCM-256","iter"',            # secure_boot_cred.js 的真实骨架
+)
+# 自匹配豁免：门禁/推送脚本自身与字节码缓存不算待传内容
+SELF_SKIP_NAMES = ("push.py", "push_public.py")
+SELF_SKIP_PATH_PARTS = ("__pycache__/",)
+
+
+def scan_secrets(files):
+    """返回 (hits, content_hits)。hits=按文件名命中；content_hits=按内容口径命中。"""
+    hits, content_hits = [], []
+    for rel in files:
+        rel_n = rel.replace("\\", "/")
+        base = rel_n.rsplit("/", 1)[-1]
+        if base in ALLOW_NAMES:
+            continue
+        if base in SELF_SKIP_NAMES or any(p in rel_n for p in SELF_SKIP_PATH_PARTS):
+            continue
+        if base in SENSITIVE_NAMES:
+            hits.append(rel)
+            continue
+        try:
+            with open(os.path.join(ROOT, rel), "rb") as f:
+                head = f.read(200000).decode("utf-8", "replace")
+        except Exception:
+            continue
+        for pat in SENSITIVE_CONTENT_PATTERNS:
+            if pat in head:
+                content_hits.append("%s <- %s" % (rel, pat))
+                break
+    return hits, content_hits
+
+
 def main():
     token = get_token()
     if not token:
@@ -146,6 +196,18 @@ def main():
         sys.exit(3)
 
     files = list_files()
+
+    # ---- 推送前硬门禁：按文件性质扫，不看排除清单（命中即零上传退出）
+    sec_hits, content_hits = scan_secrets(files)
+    if sec_hits or content_hits:
+        print("[ABORT] 敏感件拦截，未发起任何 GitHub 写入", file=sys.stderr)
+        for h in sec_hits:
+            print("  [NAME] %s" % h, file=sys.stderr)
+        for h in content_hits:
+            print("  [CONTENT] %s" % h, file=sys.stderr)
+        print("PUSH_SUMMARY added=0 updated=0 skipped=0 failed=0 total=0 ABORTED_SECRET=1")
+        sys.exit(4)
+
     added = updated = skipped = failed = 0
 
     for rel in files:

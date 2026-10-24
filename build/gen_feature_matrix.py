@@ -12,8 +12,8 @@
 """
 import io, os, sys, json, re
 
-DEFAULT_SRC = r"D:/Users/WorkBuddy/aowei_win10/shuili_app"
-DEFAULT_OUT = r"D:/Users/WorkBuddy/aowei_win10/releases"
+DEFAULT_SRC = r"D:/Users/WorkBuddy/shuili/native-shell/uos-water-pyqt6"
+DEFAULT_OUT = r"D:/Users/WorkBuddy/shuili/releases"
 
 # ---------------- 能力模型（单一事实来源） ----------------
 PLAT_FEATURES = [
