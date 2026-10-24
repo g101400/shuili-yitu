@@ -12,7 +12,8 @@
 - 四平台打包（v4.03 自我完善周期续）：
   - **UOS / 国产平台 DEB（已产出）**：新增 `build/build_uos_deb_purepy.py`（纯 Python 合成 `ar`+`xz`，不依赖 `dpkg`/`fpm`/`WSL`），实机构建 `shuili-map_4.03.20261024_{amd64,arm64,loongarch64,mips64el}.deb`（各 ≈7.8MB），自校验通过（`debian-binary`/`control.tar.xz`/`data.tar.xz` 结构合规，含 `/opt/shuili-map/{main.py,webroot}`、`/usr/bin/shuili-map` 启动器、桌面项）。
   - **Win EXE**：由 `dotnet publish -c Release -r win-x64`（.NET 8 + WebView2 单文件）实机构建，产物为 `水利工程基础信息一张图.exe`。
-  - **待带工具链环境补齐（环境硬限制，本机缺工具链，非代码缺陷）**：Android APK 缺 `gradle`/`Android SDK`/`ANDROID_HOME`；Win **MSI** 缺 `WiX`（`candle`/`light`）；iOS PWA zip 缺 `native-shell/pack_junk.py` 与基线 zip（`apple-package/`）。上述三项在具备对应工具链后按既有脚本即可产出，本周期已修脚本、补纯 Python 替代路径（UOS），未做假绿。
+  - **Android APK ✅ 已实出（环境工具链后半段就绪）**：构建于 `android_build/ShuiLiApp`（`com.shuili`，gradle `assembleRelease` 签名，版本 4.03/103），内嵌当前 `webroot`（已剥离启动凭据 `secure_boot_cred.js`），产物 `releases/ShuiliYituV4.03_20261024.apk`（≈8.5MB），已上传百度网盘（`apps/bdpan/一张图发布/shuili/public/`）与 GitHub Release v4.03。**注**：`build/targets/android/` 仍是带古建串扰的陈旧副本，真实可用 APK 工程在 `android_build/ShuiLiApp`，后续应将其归一化入仓。
+  - **Win MSI 🔴 仍缺 `WiX`（`candle`/`light`）未实出**；**iOS PWA zip 🔴 仍缺 `apple-package` 基线未实出**。两项为环境工具链缺口（非代码缺陷）。
 
 ## 2026-10-22 · 三项目独立化（重要）
 
